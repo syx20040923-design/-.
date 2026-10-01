@@ -1,0 +1,2766 @@
+```html
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>日月潭 日本語アドベンチャー</title>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --lake:#159bb5;
+  --lake-dark:#08758d;
+  --sky:#bcefff;
+  --green:#53b879;
+  --dark:#263238;
+  --pink:#ff719d;
+  --yellow:#ffd75e;
+  --red:#f05c68;
+  --white:#fff;
+}
+
+html,body{
+  margin:0;
+  padding:0;
+  min-height:100%;
+}
+
+body{
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Noto Sans JP",
+    "Yu Gothic",
+    sans-serif;
+
+  background:
+    linear-gradient(
+      180deg,
+      #aee9ff 0%,
+      #dff8ff 42%,
+      #ffffff 100%
+    );
+
+  color:var(--dark);
+  overflow-x:hidden;
+}
+
+button{
+  font-family:inherit;
+}
+
+
+/* =====================================================
+   APP
+===================================================== */
+
+#app{
+  width:100%;
+  max-width:520px;
+  min-height:100vh;
+  margin:auto;
+  position:relative;
+  overflow:hidden;
+
+  background:
+    rgba(255,255,255,.35);
+
+  box-shadow:
+    0 0 35px rgba(0,80,110,.12);
+}
+
+
+/* =====================================================
+   背景山
+===================================================== */
+
+.mountain{
+  position:absolute;
+  bottom:0;
+  width:0;
+  height:0;
+  border-left:150px solid transparent;
+  border-right:150px solid transparent;
+  border-bottom:230px solid rgba(55,137,96,.25);
+  pointer-events:none;
+}
+
+.mountain.m1{
+  left:-160px;
+  bottom:0;
+}
+
+.mountain.m2{
+  right:-170px;
+  bottom:-10px;
+  transform:scale(.85);
+  border-bottom-color:rgba(39,119,82,.2);
+}
+
+
+/* =====================================================
+   雲
+===================================================== */
+
+.cloud{
+  position:absolute;
+  width:130px;
+  height:38px;
+  background:rgba(255,255,255,.7);
+  border-radius:100px;
+  animation:cloudMove 20s linear infinite;
+  pointer-events:none;
+}
+
+.cloud:before,
+.cloud:after{
+  content:"";
+  position:absolute;
+  background:inherit;
+  border-radius:50%;
+}
+
+.cloud:before{
+  width:60px;
+  height:60px;
+  left:20px;
+  top:-27px;
+}
+
+.cloud:after{
+  width:70px;
+  height:70px;
+  right:10px;
+  top:-35px;
+}
+
+.cloud.c1{
+  top:80px;
+  left:-150px;
+}
+
+.cloud.c2{
+  top:220px;
+  left:-180px;
+  transform:scale(.7);
+  animation-delay:8s;
+}
+
+@keyframes cloudMove{
+  from{
+    transform:translateX(0);
+  }
+
+  to{
+    transform:translateX(750px);
+  }
+}
+
+
+/* =====================================================
+   畫面
+===================================================== */
+
+.screen{
+  min-height:100vh;
+  padding:20px 17px 35px;
+  position:relative;
+  z-index:2;
+  display:none;
+}
+
+.screen.active{
+  display:block;
+  animation:screenIn .45s ease;
+}
+
+@keyframes screenIn{
+  from{
+    opacity:0;
+    transform:translateY(15px);
+  }
+
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+
+/* =====================================================
+   標題
+===================================================== */
+
+.logo{
+  text-align:center;
+  margin-top:12px;
+}
+
+.jp-small{
+  color:var(--lake-dark);
+  font-size:14px;
+  letter-spacing:4px;
+  font-weight:bold;
+}
+
+.logo h1{
+  margin:8px 0 5px;
+
+  font-size:
+    clamp(31px,9vw,48px);
+
+  line-height:1.1;
+
+  color:#075a70;
+
+  text-shadow:
+    2px 3px white;
+}
+
+.subtitle{
+  color:#52717b;
+  font-size:17px;
+}
+
+
+/* =====================================================
+   日月潭 CSS 湖泊
+===================================================== */
+
+.sun-moon-lake{
+  position:relative;
+  width:280px;
+  height:220px;
+  margin:15px auto 8px;
+}
+
+.sun{
+  position:absolute;
+  width:72px;
+  height:72px;
+  border-radius:50%;
+  background:#ffd45c;
+  top:10px;
+  right:25px;
+  box-shadow:
+    0 0 25px rgba(255,210,70,.6);
+  animation:sunGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes sunGlow{
+  from{
+    transform:scale(1);
+  }
+  to{
+    transform:scale(1.08);
+  }
+}
+
+.lake{
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:125px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #59c7d8,
+      #128ca5
+    );
+
+  border-radius:
+    50% 50% 20% 20% /
+    30% 30% 20% 20%;
+
+  overflow:hidden;
+}
+
+.wave{
+  position:absolute;
+  width:180%;
+  height:35px;
+  border-top:4px solid rgba(255,255,255,.55);
+  border-radius:50%;
+  left:-40%;
+  animation:waveMove 4s ease-in-out infinite;
+}
+
+.wave.w1{
+  top:30px;
+}
+
+.wave.w2{
+  top:68px;
+  animation-delay:1s;
+}
+
+.wave.w3{
+  top:100px;
+  animation-delay:2s;
+}
+
+@keyframes waveMove{
+  0%,100%{
+    transform:translateX(-3%);
+  }
+
+  50%{
+    transform:translateX(3%);
+  }
+}
+
+
+/* =====================================================
+   小船
+===================================================== */
+
+.boat{
+  position:absolute;
+  bottom:38px;
+  left:80px;
+  width:70px;
+  height:25px;
+
+  background:#9b553c;
+
+  border-radius:
+    5px 5px 30px 30px;
+
+  animation:boatMove 3s ease-in-out infinite;
+}
+
+.boat:before{
+  content:"";
+  position:absolute;
+  left:30px;
+  bottom:20px;
+  width:4px;
+  height:65px;
+  background:#75452f;
+}
+
+.boat:after{
+  content:"";
+  position:absolute;
+  left:34px;
+  bottom:45px;
+
+  border-left:35px solid transparent;
+  border-bottom:25px solid white;
+
+  width:0;
+  height:0;
+}
+
+@keyframes boatMove{
+  0%,100%{
+    transform:translate(0,0) rotate(-1deg);
+  }
+
+  50%{
+    transform:translate(20px,-5px) rotate(2deg);
+  }
+}
+
+
+/* =====================================================
+   開始卡片
+===================================================== */
+
+.intro-card{
+  background:rgba(255,255,255,.92);
+  border-radius:22px;
+  padding:18px;
+  text-align:center;
+
+  box-shadow:
+    0 8px 28px rgba(20,100,120,.12);
+
+  margin-bottom:17px;
+}
+
+.intro-card p{
+  line-height:1.8;
+  margin:5px 0;
+  font-size:15px;
+}
+
+.primary-btn{
+  width:100%;
+  border:0;
+  border-radius:18px;
+
+  padding:17px 20px;
+
+  color:white;
+  font-size:19px;
+  font-weight:bold;
+
+  background:
+    linear-gradient(
+      135deg,
+      #087ea4,
+      #20b4c9
+    );
+
+  box-shadow:
+    0 7px 0 #05627e,
+    0 12px 25px rgba(0,100,130,.2);
+
+  transition:.15s;
+}
+
+.primary-btn:active{
+  transform:translateY(5px);
+  box-shadow:0 2px 0 #05627e;
+}
+
+.secondary-btn{
+  width:100%;
+  border:2px solid #83c9d8;
+  background:white;
+  color:#07516b;
+
+  border-radius:15px;
+
+  padding:13px;
+
+  font-size:16px;
+  font-weight:bold;
+}
+
+.small-note{
+  text-align:center;
+  color:#789098;
+  font-size:12px;
+}
+
+
+/* =====================================================
+   HUD
+===================================================== */
+
+.game-header{
+  position:sticky;
+  top:0;
+  z-index:10;
+
+  padding:4px 0 14px;
+
+  background:
+    rgba(239,251,255,.94);
+
+  backdrop-filter:blur(8px);
+}
+
+.hud{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+
+.badge{
+  background:white;
+  padding:7px 11px;
+  border-radius:20px;
+  font-size:14px;
+  font-weight:bold;
+  color:#07516b;
+
+  box-shadow:
+    0 2px 8px rgba(0,80,100,.1);
+}
+
+.score{
+  background:var(--yellow);
+  padding:7px 13px;
+  border-radius:20px;
+  font-weight:bold;
+}
+
+.progress-bg{
+  width:100%;
+  height:10px;
+  background:rgba(0,80,100,.12);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.progress{
+  height:100%;
+  width:0%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #13a3c6,
+      #47d4a0
+    );
+
+  transition:width .4s ease;
+}
+
+
+/* =====================================================
+   題目
+===================================================== */
+
+.question-card{
+  background:rgba(255,255,255,.95);
+
+  border-radius:23px;
+
+  padding:20px 17px;
+
+  box-shadow:
+    0 8px 28px rgba(20,90,110,.12);
+
+  margin-top:15px;
+}
+
+.question-type{
+  display:inline-block;
+
+  background:#e4f7fb;
+  color:#087ea4;
+
+  padding:5px 10px;
+
+  border-radius:10px;
+
+  font-size:13px;
+  font-weight:bold;
+}
+
+.question-card h2{
+  font-size:21px;
+  line-height:1.55;
+  margin:13px 0 7px;
+}
+
+.hint{
+  color:#698087;
+  font-size:14px;
+  margin-bottom:17px;
+}
+
+.options{
+  display:grid;
+  gap:11px;
+}
+
+.option{
+  width:100%;
+  min-height:57px;
+
+  padding:12px 14px;
+
+  border-radius:15px;
+
+  border:2px solid #d6ebef;
+
+  background:white;
+
+  text-align:left;
+
+  font-size:17px;
+  color:#253b42;
+
+  font-weight:600;
+
+  transition:.18s;
+}
+
+.option:active{
+  transform:scale(.98);
+}
+
+.option.correct{
+  background:#dff8ec;
+  border-color:#48c78e;
+  color:#13774d;
+
+  animation:correctPop .35s;
+}
+
+.option.wrong{
+  background:#ffe5e5;
+  border-color:#f26b6b;
+  color:#a84343;
+
+  animation:shake .35s;
+}
+
+@keyframes correctPop{
+  50%{
+    transform:scale(1.03);
+  }
+}
+
+@keyframes shake{
+  25%{
+    transform:translateX(-6px);
+  }
+
+  50%{
+    transform:translateX(6px);
+  }
+
+  75%{
+    transform:translateX(-4px);
+  }
+}
+
+
+/* =====================================================
+   Feedback
+===================================================== */
+
+.feedback{
+  margin-top:15px;
+  padding:13px;
+
+  border-radius:14px;
+
+  background:#f2f8fa;
+
+  display:none;
+
+  line-height:1.7;
+  font-size:14px;
+}
+
+.feedback.show{
+  display:block;
+  animation:screenIn .3s;
+}
+
+.next-btn{
+  width:100%;
+  border:0;
+
+  margin-top:12px;
+
+  padding:14px;
+
+  border-radius:15px;
+
+  background:#07516b;
+  color:white;
+
+  font-size:17px;
+  font-weight:bold;
+
+  display:none;
+}
+
+
+/* =====================================================
+   ★ 動漫風小人
+===================================================== */
+
+#reactionLayer{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:0;
+
+  z-index:100;
+
+  pointer-events:none;
+
+  display:flex;
+  justify-content:center;
+}
+
+.reaction{
+  position:absolute;
+
+  bottom:5px;
+
+  width:230px;
+  height:260px;
+
+  display:none;
+}
+
+.reaction.show{
+  display:block;
+}
+
+
+/* =====================================================
+   動漫人物
+===================================================== */
+
+.anime-person{
+  position:absolute;
+
+  left:50%;
+  bottom:0;
+
+  width:120px;
+  height:210px;
+
+  transform:translateX(-50%);
+}
+
+
+/* 頭 */
+
+.anime-head{
+  position:absolute;
+
+  left:24px;
+  top:27px;
+
+  width:72px;
+  height:70px;
+
+  background:#ffe0b2;
+
+  border:4px solid #3c3035;
+
+  border-radius:
+    48% 48% 45% 45%;
+
+  z-index:5;
+}
+
+
+/* 動漫頭髮 */
+
+.anime-hair{
+  position:absolute;
+
+  left:19px;
+  top:17px;
+
+  width:82px;
+  height:62px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #5b3975,
+      #30204e
+    );
+
+  border:4px solid #3c3035;
+
+  border-radius:
+    55% 50% 40% 30%;
+
+  z-index:7;
+
+  clip-path:
+    polygon(
+      0 0,
+      90% 0,
+      100% 30%,
+      90% 70%,
+      75% 48%,
+      62% 88%,
+      48% 48%,
+      30% 80%,
+      22% 45%,
+      0 65%
+    );
+}
+
+
+/* 髮飾 */
+
+.hair-ribbon{
+  position:absolute;
+
+  left:84px;
+  top:28px;
+
+  font-size:25px;
+
+  z-index:9;
+
+  transform:rotate(15deg);
+}
+
+
+/* 眼睛 */
+
+.anime-eye{
+  position:absolute;
+
+  top:58px;
+
+  width:14px;
+  height:19px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #fff,
+      #d9f4ff
+    );
+
+  border:3px solid #3c3035;
+
+  border-radius:50%;
+
+  z-index:10;
+}
+
+.anime-eye:after{
+  content:"";
+
+  position:absolute;
+
+  width:6px;
+  height:9px;
+
+  left:2px;
+  top:2px;
+
+  background:#513467;
+
+  border-radius:50%;
+}
+
+.anime-eye.left{
+  left:36px;
+}
+
+.anime-eye.right{
+  left:65px;
+}
+
+
+/* 腮紅 */
+
+.blush{
+  position:absolute;
+
+  width:15px;
+  height:7px;
+
+  background:#ff9da9;
+
+  border-radius:50%;
+
+  top:83px;
+
+  z-index:10;
+
+  opacity:.75;
+}
+
+.blush.left{
+  left:27px;
+}
+
+.blush.right{
+  left:72px;
+}
+
+
+/* 嘴巴 */
+
+.anime-mouth{
+  position:absolute;
+
+  top:88px;
+  left:55px;
+
+  width:13px;
+  height:8px;
+
+  border-bottom:3px solid #713d4b;
+
+  border-radius:50%;
+
+  z-index:10;
+}
+
+
+/* 身體 */
+
+.anime-body{
+  position:absolute;
+
+  top:94px;
+  left:31px;
+
+  width:58px;
+  height:70px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ff78a6,
+      #d94d80
+    );
+
+  border:4px solid #3c3035;
+
+  border-radius:
+    20px 20px 14px 14px;
+
+  z-index:3;
+}
+
+
+/* 衣服蝴蝶結 */
+
+.ribbon{
+  position:absolute;
+
+  left:47px;
+  top:105px;
+
+  font-size:22px;
+
+  z-index:8;
+}
+
+
+/* 手臂 */
+
+.anime-arm{
+  position:absolute;
+
+  width:17px;
+  height:68px;
+
+  background:#ffe0b2;
+
+  border:4px solid #3c3035;
+
+  border-radius:20px;
+
+  z-index:2;
+
+  transform-origin:top center;
+}
+
+
+/* 左手 */
+
+.anime-arm.left{
+  left:15px;
+  top:100px;
+
+  transform:rotate(35deg);
+}
+
+
+/* 右手 */
+
+.anime-arm.right{
+  right:14px;
+  top:100px;
+
+  transform:rotate(-35deg);
+}
+
+
+/* 腿 */
+
+.anime-leg{
+  position:absolute;
+
+  top:155px;
+
+  width:19px;
+  height:50px;
+
+  background:#4e4c78;
+
+  border:4px solid #3c3035;
+
+  border-radius:
+    0 0 12px 12px;
+
+  z-index:1;
+}
+
+.anime-leg.left{
+  left:40px;
+}
+
+.anime-leg.right{
+  left:65px;
+}
+
+
+/* 鞋子 */
+
+.anime-shoe{
+  position:absolute;
+
+  top:194px;
+
+  width:34px;
+  height:15px;
+
+  background:#ffffff;
+
+  border:4px solid #3c3035;
+
+  border-radius:20px;
+
+  z-index:2;
+}
+
+.anime-shoe.left{
+  left:27px;
+}
+
+.anime-shoe.right{
+  left:64px;
+}
+
+
+/* =====================================================
+   牌子
+===================================================== */
+
+.anime-sign{
+  position:absolute;
+
+  top:0;
+  left:50%;
+
+  width:125px;
+  height:72px;
+
+  transform:translateX(-50%);
+
+  border:5px solid white;
+
+  border-radius:19px;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  font-size:39px;
+  font-weight:900;
+
+  box-shadow:
+    0 7px 18px rgba(0,0,0,.2);
+
+  z-index:20;
+}
+
+.sign-label{
+  position:absolute;
+
+  bottom:-28px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  width:140px;
+
+  padding:5px;
+
+  color:white;
+
+  text-align:center;
+
+  border-radius:20px;
+
+  font-size:14px;
+  font-weight:bold;
+
+  white-space:nowrap;
+}
+
+
+/* 正確 */
+
+.reaction.correct .anime-sign{
+  background:
+    linear-gradient(
+      135deg,
+      #48d394,
+      #15965f
+    );
+
+  animation:correctSign .7s ease;
+}
+
+.reaction.correct .sign-label{
+  background:#128a58;
+}
+
+
+/* 錯誤 */
+
+.reaction.wrong .anime-sign{
+  background:
+    linear-gradient(
+      135deg,
+      #ff7777,
+      #df3d4c
+    );
+
+  animation:wrongSign .7s ease;
+}
+
+.reaction.wrong .sign-label{
+  background:#cc3443;
+}
+
+
+/* =====================================================
+   動漫小人跳出
+===================================================== */
+
+.reaction.correct .anime-person{
+  animation:animeJump .8s ease;
+}
+
+@keyframes animeJump{
+
+  0%{
+    transform:
+      translateX(-50%)
+      translateY(240px)
+      scale(.8);
+  }
+
+  35%{
+    transform:
+      translateX(-50%)
+      translateY(-18px)
+      scale(1.05);
+  }
+
+  55%{
+    transform:
+      translateX(-50%)
+      translateY(7px)
+      scale(.98);
+  }
+
+  75%{
+    transform:
+      translateX(-50%)
+      translateY(-5px)
+      scale(1.02);
+  }
+
+  100%{
+    transform:
+      translateX(-50%)
+      translateY(0)
+      scale(1);
+  }
+}
+
+
+/* 正確牌子彈跳 */
+
+@keyframes correctSign{
+
+  0%{
+    transform:
+      translateX(-50%)
+      scale(.2)
+      rotate(-25deg);
+  }
+
+  45%{
+    transform:
+      translateX(-50%)
+      scale(1.2)
+      rotate(10deg);
+  }
+
+  70%{
+    transform:
+      translateX(-50%)
+      scale(.95)
+      rotate(-4deg);
+  }
+
+  100%{
+    transform:
+      translateX(-50%)
+      scale(1)
+      rotate(0);
+  }
+}
+
+
+/* =====================================================
+   錯誤動畫
+===================================================== */
+
+.reaction.wrong .anime-person{
+  animation:animeWrong .8s ease;
+}
+
+@keyframes animeWrong{
+
+  0%{
+    transform:
+      translateX(-50%)
+      translateY(240px);
+  }
+
+  30%{
+    transform:
+      translateX(-50%)
+      translateY(0);
+  }
+
+  42%{
+    transform:
+      translateX(-50%)
+      rotate(-9deg);
+  }
+
+  52%{
+    transform:
+      translateX(-50%)
+      rotate(9deg);
+  }
+
+  62%{
+    transform:
+      translateX(-50%)
+      rotate(-7deg);
+  }
+
+  72%{
+    transform:
+      translateX(-50%)
+      rotate(7deg);
+  }
+
+  100%{
+    transform:
+      translateX(-50%)
+      rotate(0);
+  }
+}
+
+
+@keyframes wrongSign{
+
+  0%{
+    transform:
+      translateX(-50%)
+      rotate(0);
+  }
+
+  20%{
+    transform:
+      translateX(-50%)
+      rotate(-15deg);
+  }
+
+  40%{
+    transform:
+      translateX(-50%)
+      rotate(15deg);
+  }
+
+  60%{
+    transform:
+      translateX(-50%)
+      rotate(-10deg);
+  }
+
+  80%{
+    transform:
+      translateX(-50%)
+      rotate(7deg);
+  }
+
+  100%{
+    transform:
+      translateX(-50%)
+      rotate(0);
+  }
+}
+
+
+/* =====================================================
+   結果
+===================================================== */
+
+.result-hero{
+  text-align:center;
+  padding-top:35px;
+}
+
+.result-icon{
+  font-size:75px;
+
+  animation:
+    resultBounce 1.3s infinite;
+}
+
+@keyframes resultBounce{
+
+  0%,100%{
+    transform:translateY(0);
+  }
+
+  50%{
+    transform:translateY(-12px);
+  }
+}
+
+.result-hero h1{
+  color:#07516b;
+  font-size:30px;
+}
+
+.final-score{
+  font-size:58px;
+  font-weight:900;
+  color:#087ea4;
+}
+
+.final-score small{
+  font-size:22px;
+}
+
+.result-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.stat{
+  background:white;
+  border-radius:15px;
+  padding:14px;
+}
+
+.stat strong{
+  display:block;
+  font-size:24px;
+  color:#07516b;
+}
+
+.result-message{
+  background:white;
+  border-radius:20px;
+  padding:18px;
+
+  line-height:1.8;
+
+  box-shadow:
+    0 6px 22px rgba(20,90,110,.1);
+
+  margin:18px 0;
+}
+
+
+/* =====================================================
+   葉子動畫
+===================================================== */
+
+.leaf{
+  position:fixed;
+  top:-20px;
+
+  z-index:30;
+
+  pointer-events:none;
+
+  animation:
+    leafFall 5s linear forwards;
+}
+
+@keyframes leafFall{
+
+  0%{
+    transform:
+      translateY(-20px)
+      rotate(0);
+    opacity:1;
+  }
+
+  100%{
+    transform:
+      translateY(110vh)
+      translateX(80px)
+      rotate(500deg);
+    opacity:0;
+  }
+}
+
+
+/* =====================================================
+   手機
+===================================================== */
+
+@media(max-width:360px){
+
+  .screen{
+    padding-left:13px;
+    padding-right:13px;
+  }
+
+  .question-card h2{
+    font-size:19px;
+  }
+
+  .option{
+    font-size:16px;
+  }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div id="app">
+
+  <div class="cloud c1"></div>
+  <div class="cloud c2"></div>
+
+  <div class="mountain m1"></div>
+  <div class="mountain m2"></div>
+
+
+  <!-- =================================================
+       開始畫面
+  ================================================== -->
+
+  <section
+    id="startScreen"
+    class="screen active"
+  >
+
+    <div class="logo">
+
+      <div class="jp-small">
+        台湾 × にほんご
+      </div>
+
+      <h1>
+        日月潭<br>
+        日本語アドベンチャー
+      </h1>
+
+      <div class="subtitle">
+        楽しく台湾を旅しよう！
+      </div>
+
+    </div>
+
+
+    <!-- 日月潭 -->
+
+    <div class="sun-moon-lake">
+
+      <div class="sun"></div>
+
+      <div class="lake">
+
+        <div class="wave w1"></div>
+        <div class="wave w2"></div>
+        <div class="wave w3"></div>
+
+        <div class="boat"></div>
+
+      </div>
+
+    </div>
+
+
+    <div class="intro-card">
+
+      <p>
+        🌊 日月潭へようこそ！
+      </p>
+
+      <p>
+        クイズに答えながら、<br>
+        日月潭について日本語で<br>
+        楽しく学びましょう！
+      </p>
+
+      <p>
+        🎌 観光 × 単語 × 会話
+      </p>
+
+    </div>
+
+
+    <button
+      class="primary-btn"
+      onclick="startGame()"
+    >
+      🚀 旅を始める！
+    </button>
+
+
+    <p class="small-note">
+      全10問・日本語学習者向け
+    </p>
+
+  </section>
+
+
+
+  <!-- =================================================
+       遊戲畫面
+  ================================================== -->
+
+  <section
+    id="gameScreen"
+    class="screen"
+  >
+
+    <div class="game-header">
+
+      <div class="hud">
+
+        <div
+          id="questionNumber"
+          class="badge"
+        >
+          第1問 / 10
+        </div>
+
+        <div class="score">
+          ⭐
+          <span id="score">0</span>
+          点
+        </div>
+
+      </div>
+
+
+      <div class="progress-bg">
+
+        <div
+          id="progress"
+          class="progress"
+        ></div>
+
+      </div>
+
+    </div>
+
+
+    <div id="questionContainer"></div>
+
+  </section>
+
+
+
+  <!-- =================================================
+       結果
+  ================================================== -->
+
+  <section
+    id="resultScreen"
+    class="screen"
+  >
+
+    <div class="result-hero">
+
+      <div
+        id="resultIcon"
+        class="result-icon"
+      >
+        🎉
+      </div>
+
+      <h1>
+        旅が終わりました！
+      </h1>
+
+
+      <div class="final-score">
+
+        <span id="finalScore">
+          0
+        </span>
+
+        <small>
+          点
+        </small>
+
+      </div>
+
+
+      <div class="result-stats">
+
+        <div class="stat">
+
+          正解
+
+          <strong id="correctCount">
+            0
+          </strong>
+
+          問
+
+        </div>
+
+
+        <div class="stat">
+
+          正解率
+
+          <strong id="accuracy">
+            0%
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <div
+        id="resultMessage"
+        class="result-message"
+      >
+        おつかれさまでした！
+      </div>
+
+
+      <button
+        class="primary-btn"
+        onclick="restartGame()"
+      >
+        🔄 もう一度遊ぶ
+      </button>
+
+      <br>
+
+      <button
+        class="secondary-btn"
+        onclick="showStart()"
+      >
+        🌊 タイトルへ戻る
+      </button>
+
+
+      <p class="small-note">
+        また日月潭を旅しましょう！
+      </p>
+
+    </div>
+
+  </section>
+
+</div>
+
+
+
+<!-- =====================================================
+     ★ 動漫風小人
+====================================================== -->
+
+<div id="reactionLayer">
+
+
+  <!-- 正確 -->
+
+  <div
+    id="correctReaction"
+    class="reaction correct"
+  >
+
+    <div class="anime-sign">
+
+      ⭕
+
+      <div class="sign-label">
+        せいかい！
+      </div>
+
+    </div>
+
+
+    <div class="anime-person">
+
+      <div class="anime-hair"></div>
+
+      <div class="hair-ribbon">
+        🎀
+      </div>
+
+      <div class="anime-head"></div>
+
+      <div class="anime-eye left"></div>
+      <div class="anime-eye right"></div>
+
+      <div class="blush left"></div>
+      <div class="blush right"></div>
+
+      <div class="anime-mouth"></div>
+
+      <div class="anime-arm left"></div>
+      <div class="anime-arm right"></div>
+
+      <div class="anime-body"></div>
+
+      <div class="ribbon">
+        🎀
+      </div>
+
+      <div class="anime-leg left"></div>
+      <div class="anime-leg right"></div>
+
+      <div class="anime-shoe left"></div>
+      <div class="anime-shoe right"></div>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- 錯誤 -->
+
+  <div
+    id="wrongReaction"
+    class="reaction wrong"
+  >
+
+    <div class="anime-sign">
+
+      ❌
+
+      <div class="sign-label">
+        ざんねん！
+      </div>
+
+    </div>
+
+
+    <div class="anime-person">
+
+      <div class="anime-hair"></div>
+
+      <div class="hair-ribbon">
+        🎀
+      </div>
+
+      <div class="anime-head"></div>
+
+      <div class="anime-eye left"></div>
+      <div class="anime-eye right"></div>
+
+      <div class="blush left"></div>
+      <div class="blush right"></div>
+
+      <div class="anime-mouth"></div>
+
+      <div class="anime-arm left"></div>
+      <div class="anime-arm right"></div>
+
+      <div class="anime-body"></div>
+
+      <div class="ribbon">
+        🎀
+      </div>
+
+      <div class="anime-leg left"></div>
+      <div class="anime-leg right"></div>
+
+      <div class="anime-shoe left"></div>
+      <div class="anime-shoe right"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<script>
+
+/* =====================================================
+   題目
+===================================================== */
+
+const questions = [
+
+  {
+    type:"スポット",
+
+    question:
+      "日月潭（にちげつたん）は、どの国にありますか？",
+
+    hint:
+      "台湾の有名な観光地です。",
+
+    options:[
+      "日本",
+      "韓国",
+      "台湾",
+      "タイ"
+    ],
+
+    answer:2,
+
+    explanation:
+      "正解！日月潭は台湾の南投県にある有名な湖です。"
+  },
+
+
+  {
+    type:"単語",
+
+    question:
+      "「湖（みずうみ）」の意味はどれですか？",
+
+    hint:
+      "日月潭は大きな「湖」です。",
+
+    options:[
+      "mountain",
+      "lake",
+      "river",
+      "station"
+    ],
+
+    answer:1,
+
+    explanation:
+      "「湖（みずうみ）」は英語で lake です。"
+  },
+
+
+  {
+    type:"観光",
+
+    question:
+      "日月潭で楽しむことができるものはどれですか？",
+
+    hint:
+      "湖の上でできます。",
+
+    options:[
+      "ボート",
+      "スキー",
+      "砂漠探検",
+      "ラクダ乗り"
+    ],
+
+    answer:0,
+
+    explanation:
+      "日月潭では遊覧船などのボートを楽しむことができます。"
+  },
+
+
+  {
+    type:"単語",
+
+    question:
+      "「景色（けしき）」の意味はどれですか？",
+
+    hint:
+      "山や湖を見たときに使います。",
+
+    options:[
+      "ticket",
+      "food",
+      "scenery / view",
+      "weather"
+    ],
+
+    answer:2,
+
+    explanation:
+      "「景色」は scenery や view という意味です。"
+  },
+
+
+  {
+    type:"会話",
+
+    question:
+      "友達：『日月潭はどうですか？』\nあなた：『＿＿＿＿！』",
+
+    hint:
+      "美しい景色を見たときの感想です。",
+
+    options:[
+      "とてもきれいです",
+      "電車を食べます",
+      "駅を飲みます",
+      "明日へ行きます"
+    ],
+
+    answer:0,
+
+    explanation:
+      "「とてもきれいです！」は景色への自然な感想です。"
+  },
+
+
+  {
+    type:"単語",
+
+    question:
+      "「山（やま）」は英語で何ですか？",
+
+    hint:
+      "日月潭の周りにもたくさんあります。",
+
+    options:[
+      "lake",
+      "mountain",
+      "boat",
+      "ticket"
+    ],
+
+    answer:1,
+
+    explanation:
+      "「山（やま）」は mountain です。"
+  },
+
+
+  {
+    type:"観光",
+
+    question:
+      "日月潭の周りには何がありますか？",
+
+    hint:
+      "自然を想像してください。",
+
+    options:[
+      "山と湖",
+      "砂漠とピラミッド",
+      "氷河",
+      "火山だけ"
+    ],
+
+    answer:0,
+
+    explanation:
+      "日月潭は山に囲まれた美しい湖です。"
+  },
+
+
+  {
+    type:"文法",
+
+    question:
+      "「日月潭＿＿行きます。」空欄に入る助詞は？",
+
+    hint:
+      "方向を表す助詞です。",
+
+    options:[
+      "へ",
+      "を",
+      "が",
+      "の"
+    ],
+
+    answer:0,
+
+    explanation:
+      "「日月潭へ行きます。」の「へ」は方向を表します。"
+  },
+
+
+  {
+    type:"会話",
+
+    question:
+      "旅行中に写真を撮りたいとき、何と言いますか？",
+
+    hint:
+      "「〜てもいいですか？」を使います。",
+
+    options:[
+      "写真を撮ってもいいですか？",
+      "写真を食べますか？",
+      "写真へ行きますか？",
+      "写真を飲みますか？"
+    ],
+
+    answer:0,
+
+    explanation:
+      "「写真を撮ってもいいですか？」は、写真撮影の許可を求める表現です。"
+  },
+
+
+  {
+    type:"チャレンジ",
+
+    question:
+      "「日月潭の景色はとても美しいです。」の意味は？",
+
+    hint:
+      "旅行で使える文章です。",
+
+    options:[
+      "The view of Sun Moon Lake is very beautiful.",
+      "Sun Moon Lake is very cold.",
+      "I bought a ticket.",
+      "Where is the train?"
+    ],
+
+    answer:0,
+
+    explanation:
+      "「景色はとても美しいです」は「The view is very beautiful」という意味です。"
+  }
+
+];
+
+
+/* =====================================================
+   遊戲狀態
+===================================================== */
+
+let currentQuestion=0;
+let score=0;
+let correct=0;
+let answered=false;
+
+
+/* =====================================================
+   音效
+===================================================== */
+
+let audioContext=null;
+
+function playSound(type){
+
+  try{
+
+    if(!audioContext){
+
+      audioContext=
+        new(
+          window.AudioContext ||
+          window.webkitAudioContext
+        )();
+    }
+
+    const oscillator=
+      audioContext.createOscillator();
+
+    const gain=
+      audioContext.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(
+      audioContext.destination
+    );
+
+
+    if(type==="correct"){
+
+      oscillator.frequency.setValueAtTime(
+        523,
+        audioContext.currentTime
+      );
+
+      oscillator.frequency.exponentialRampToValueAtTime(
+        784,
+        audioContext.currentTime+.15
+      );
+
+    }else{
+
+      oscillator.frequency.setValueAtTime(
+        220,
+        audioContext.currentTime
+      );
+
+      oscillator.frequency.exponentialRampToValueAtTime(
+        130,
+        audioContext.currentTime+.18
+      );
+
+    }
+
+
+    gain.gain.setValueAtTime(
+      .08,
+      audioContext.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      .001,
+      audioContext.currentTime+.25
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+      audioContext.currentTime+.25
+    );
+
+  }catch(e){}
+
+}
+
+
+/* =====================================================
+   開始
+===================================================== */
+
+function startGame(){
+
+  currentQuestion=0;
+  score=0;
+  correct=0;
+
+  document
+    .getElementById("startScreen")
+    .classList.remove("active");
+
+  document
+    .getElementById("resultScreen")
+    .classList.remove("active");
+
+  document
+    .getElementById("gameScreen")
+    .classList.add("active");
+
+  updateScore();
+
+  showQuestion();
+
+  window.scrollTo(0,0);
+}
+
+
+/* =====================================================
+   顯示題目
+===================================================== */
+
+function showQuestion(){
+
+  answered=false;
+
+  const q=
+    questions[currentQuestion];
+
+
+  document
+    .getElementById("questionNumber")
+    .textContent=
+      `第${currentQuestion+1}問 / ${questions.length}`;
+
+
+  document
+    .getElementById("progress")
+    .style.width=
+      `${currentQuestion/questions.length*100}%`;
+
+
+  let html=`
+
+    <div class="question-card">
+
+      <span class="question-type">
+        ${q.type}
+      </span>
+
+      <h2>
+        ${q.question.replace(/\n/g,"<br>")}
+      </h2>
+
+      <div class="hint">
+        💡 ${q.hint}
+      </div>
+
+      <div class="options">
+  `;
+
+
+  q.options.forEach(
+    (option,index)=>{
+
+      html+=`
+
+        <button
+          class="option"
+          id="option-${index}"
+          onclick="answerQuestion(${index})"
+        >
+          ${option}
+        </button>
+
+      `;
+
+    }
+  );
+
+
+  html+=`
+
+      </div>
+
+      <div
+        id="feedback"
+        class="feedback"
+      ></div>
+
+      <button
+        id="nextButton"
+        class="next-btn"
+        onclick="nextQuestion()"
+      >
+        ${
+          currentQuestion===questions.length-1
+          ?"結果を見る 🎉"
+          :"次の問題へ →"
+        }
+      </button>
+
+    </div>
+
+  `;
+
+
+  document
+    .getElementById("questionContainer")
+    .innerHTML=html;
+
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+
+/* =====================================================
+   回答
+===================================================== */
+
+function answerQuestion(selected){
+
+  if(answered)return;
+
+  answered=true;
+
+  const q=
+    questions[currentQuestion];
+
+
+  const selectedButton=
+    document.getElementById(
+      `option-${selected}`
+    );
+
+  const correctButton=
+    document.getElementById(
+      `option-${q.answer}`
+    );
+
+
+  /* 正確 */
+
+  if(selected===q.answer){
+
+    selectedButton
+      .classList
+      .add("correct");
+
+    score+=10;
+    correct++;
+
+    playSound("correct");
+
+    showReaction("correct");
+
+    showFeedback(
+      `🎉 正解！<br>${q.explanation}`
+    );
+
+    createLeaves(8);
+
+  }
+
+  /* 錯誤 */
+
+  else{
+
+    selectedButton
+      .classList
+      .add("wrong");
+
+    correctButton
+      .classList
+      .add("correct");
+
+    playSound("wrong");
+
+    showReaction("wrong");
+
+    showFeedback(
+      `📚 おしい！<br>${q.explanation}`
+    );
+
+  }
+
+
+  document
+    .querySelectorAll(".option")
+    .forEach(
+      button=>{
+        button.disabled=true;
+      }
+    );
+
+
+  updateScore();
+
+
+  document
+    .getElementById("nextButton")
+    .style.display="block";
+}
+
+
+/* =====================================================
+   ★ 動漫小人
+===================================================== */
+
+function showReaction(type){
+
+  const correctReaction=
+    document.getElementById(
+      "correctReaction"
+    );
+
+  const wrongReaction=
+    document.getElementById(
+      "wrongReaction"
+    );
+
+
+  correctReaction
+    .classList
+    .remove("show");
+
+  wrongReaction
+    .classList
+    .remove("show");
+
+
+  void correctReaction.offsetWidth;
+  void wrongReaction.offsetWidth;
+
+
+  if(type==="correct"){
+
+    correctReaction
+      .classList
+      .add("show");
+
+  }else{
+
+    wrongReaction
+      .classList
+      .add("show");
+
+  }
+
+
+  setTimeout(()=>{
+
+    correctReaction
+      .classList
+      .remove("show");
+
+    wrongReaction
+      .classList
+      .remove("show");
+
+  },1900);
+
+}
+
+
+/* =====================================================
+   Feedback
+===================================================== */
+
+function showFeedback(text){
+
+  const feedback=
+    document.getElementById(
+      "feedback"
+    );
+
+  feedback.innerHTML=text;
+
+  feedback.classList.add("show");
+}
+
+
+/* =====================================================
+   下一題
+===================================================== */
+
+function nextQuestion(){
+
+  currentQuestion++;
+
+
+  if(
+    currentQuestion>=
+    questions.length
+  ){
+
+    finishGame();
+
+    return;
+  }
+
+
+  showQuestion();
+}
+
+
+/* =====================================================
+   分數
+===================================================== */
+
+function updateScore(){
+
+  document
+    .getElementById("score")
+    .textContent=score;
+}
+
+
+/* =====================================================
+   結束
+===================================================== */
+
+function finishGame(){
+
+  document
+    .getElementById("gameScreen")
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById("resultScreen")
+    .classList
+    .add("active");
+
+
+  document
+    .getElementById("progress")
+    .style.width="100%";
+
+
+  document
+    .getElementById("finalScore")
+    .textContent=score;
+
+
+  document
+    .getElementById("correctCount")
+    .textContent=correct;
+
+
+  const accuracy=
+    Math.round(
+      correct/
+      questions.length*
+      100
+    );
+
+
+  document
+    .getElementById("accuracy")
+    .textContent=
+      accuracy+"%";
+
+
+  let icon="🎉";
+  let message="";
+
+
+  if(score===100){
+
+    icon="🏆";
+
+    message=
+      "すごい！パーフェクトです！<br>"+
+      "日月潭の日本語マスターですね！";
+
+  }
+
+  else if(score>=80){
+
+    icon="🌟";
+
+    message=
+      "すばらしいです！<br>"+
+      "台湾旅行の日本語もばっちりです！";
+
+  }
+
+  else if(score>=60){
+
+    icon="😊";
+
+    message=
+      "よくできました！<br>"+
+      "もう一度遊んで日本語を練習しましょう！";
+
+  }
+
+  else{
+
+    icon="🌱";
+
+    message=
+      "おつかれさまでした！<br>"+
+      "もう一度挑戦してみましょう！";
+
+  }
+
+
+  document
+    .getElementById("resultIcon")
+    .textContent=icon;
+
+
+  document
+    .getElementById("resultMessage")
+    .innerHTML=message;
+
+
+  for(
+    let i=0;
+    i<18;
+    i++
+  ){
+
+    setTimeout(
+      ()=>{
+        createLeaf();
+      },
+      i*100
+    );
+
+  }
+
+
+  window.scrollTo(0,0);
+}
+
+
+/* =====================================================
+   重新開始
+===================================================== */
+
+function restartGame(){
+
+  startGame();
+
+}
+
+
+/* =====================================================
+   回首頁
+===================================================== */
+
+function showStart(){
+
+  document
+    .getElementById("gameScreen")
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById("resultScreen")
+    .classList
+    .remove("active");
+
+
+  document
+    .getElementById("startScreen")
+    .classList
+    .add("active");
+
+
+  window.scrollTo(0,0);
+}
+
+
+/* =====================================================
+   葉子動畫
+===================================================== */
+
+function createLeaf(){
+
+  const leaf=
+    document.createElement("div");
+
+  leaf.className="leaf";
+
+  leaf.textContent=
+    Math.random()>.5
+    ?"🍃"
+    :"🌿";
+
+  leaf.style.left=
+    Math.random()*100+
+    "vw";
+
+  leaf.style.fontSize=
+    14+
+    Math.random()*14+
+    "px";
+
+  leaf.style.animationDuration=
+    3+
+    Math.random()*3+
+    "s";
+
+  document.body.appendChild(leaf);
+
+  setTimeout(
+    ()=>{
+      leaf.remove();
+    },
+    6500
+  );
+}
+
+
+function createLeaves(number){
+
+  for(
+    let i=0;
+    i<number;
+    i++
+  ){
+
+    setTimeout(
+      createLeaf,
+      i*80
+    );
+
+  }
+}
+
+
+/* =====================================================
+   鍵盤操作
+===================================================== */
+
+document.addEventListener(
+  "keydown",
+  function(e){
+
+    if(
+      !document
+        .getElementById("gameScreen")
+        .classList
+        .contains("active")
+    ){
+      return;
+    }
+
+
+    if(
+      answered &&
+      e.key==="Enter"
+    ){
+
+      nextQuestion();
+
+      return;
+    }
+
+
+    if(!answered){
+
+      const number=
+        parseInt(e.key);
+
+      if(
+        number>=1 &&
+        number<=4
+      ){
+
+        answerQuestion(
+          number-1
+        );
+
+      }
+
+    }
+
+  }
+);
+
+
+/* =====================================================
+   開始畫面自然落葉
+===================================================== */
+
+setInterval(
+  ()=>{
+
+    if(
+      document
+        .getElementById("startScreen")
+        .classList
+        .contains("active")
+    ){
+
+      if(
+        Math.random()>.45
+      ){
+
+        createLeaf();
+
+      }
+
+    }
+
+  },
+  1900
+);
+
+</script>
+
+</body>
+</html>
+```
